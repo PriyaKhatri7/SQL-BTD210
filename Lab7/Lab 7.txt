@@ -1,0 +1,68 @@
+We, Muskan, Priya, Lukas, declare that the attached assignment is our own work in accordance with the Seneca Academic Policy.  No part of this assignment has been copied manually or electronically from any other source (including web sites) or distributed to other students.
+
+Also, on top of Lab7.txt, specify what each member has done towards the completion of this work:
+	Name	Task(s)
+1-	Muskan	answers
+2-	Priya	answers
+3-	Lukas	answers
+
+
+
+PL/SQL procedure successfully completed.
+
+
+      B_ID
+----------
+      1700
+
+
+LOCATION_ID STREET_ADDRESS                           POSTAL_CODE  CITY                           STATE_PROVINCE            CO
+----------- ---------------------------------------- ------------ ------------------------------ ------------------------- --
+       1700 2004 Charade Rd                          98199        Seattle                        Washington                US
+
+
+Error starting at line : 20 in command -
+CREATE TABLE CPY_DEPT AS SELECT * FROM DEPARTMENTS
+Error report -
+ORA-00955: name is already used by an existing object
+00955. 00000 -  "name is already used by an existing object"
+*Cause:    
+*Action:
+
+Error starting at line : 27 in command -
+DECLARE
+
+v_DEPTNO CPY_DEPT.DEPARTMENT_ID%TYPE := 10;
+v_manager_id cpy_dept.manager_id%type :=100;
+v_location_id cpy_dept.location_id%type :=1700;
+
+BEGIN
+DELETE FROM CPY_DEPT WHERE DEPARTMENT_ID = v_deptno;
+dbms_output.put_line(SQL%ROWCOUNT || ' row deleted');
+update cpy_dept set manager_id = v_manager_id where location_id=v_location_id;
+dbms_output.put_line(SQL%ROWCOUNT || ' row updated');
+END;
+
+
+--Question 4
+/* Create a PL/SQL block that merges the department table into cpy_dept, 
+updating cpy_dept. Make sure you are NOT modifying the departments table. 
+Run the block and display the data in cpy_dept table using a SELECT 
+statement.*/
+SELECT * FROM DEPARTMENTS;
+select * from cpy_dept;
+
+MERGE INTO cpy_dept cd USING (SELECT * FROM departments) d 
+ON (cd.department_id = d.department_id and cd.department_name = d.department_name)
+WHEN MATCHED THEN 
+UPDATE SET cd.manager_id = d.manager_id,
+cd.location_id = d.location_id
+WHEN NOT MATCHED THEN 
+INSERT (cd.department_id, cd.department_name, cd.manager_id, cd.location_id)
+    values(d.department_id, d.department_name, d.manager_id, d.location_id);
+Error report -
+ORA-06550: line 20, column 1:
+PLS-00103: Encountered the symbol "SELECT" 
+06550. 00000 -  "line %s, column %s:\n%s"
+*Cause:    Usually a PL/SQL compilation error.
+*Action:
